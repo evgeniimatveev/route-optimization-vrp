@@ -139,7 +139,7 @@ pytest · GitHub Actions
 ```
 src/
   generate_data.py         synthetic LA delivery dataset — stops, demand, service time, time windows
-  distance.py               haversine distance matrix + travel-time conversion
+  geo.py                     haversine distance matrix + travel-time conversion
   cvrp_solver.py            OR-Tools CVRPTW solver (capacity + time windows)
   baseline_solver.py        naive nearest-neighbor baseline (blind to time) + ETA simulation
   app.py                    Streamlit dashboard (routes, KPIs, business case, delivery schedule)

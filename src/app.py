@@ -12,7 +12,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from baseline_solver import solve_nearest_neighbor
 from cvrp_solver import build_input, solve_cvrp
-from distance import AVG_SPEED_KMH
+from geo import AVG_SPEED_KMH
 
 WORKDAY_START = datetime(2000, 1, 1, 8, 0)  # 8:00 AM — matches generate_data.py's horizon
 

@@ -1,6 +1,6 @@
 import numpy as np
 
-from distance import haversine_matrix
+from geo import haversine_matrix
 
 
 def test_zero_diagonal():

@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 from ortools.constraint_solver import pywrapcp, routing_enums_pb2
 
-from distance import AVG_SPEED_KMH, haversine_matrix, travel_time_matrix_s
+from geo import AVG_SPEED_KMH, haversine_matrix, travel_time_matrix_s
 
 DEPOT_INDEX = 0
 

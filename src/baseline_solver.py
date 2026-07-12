@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 import numpy as np
 import pandas as pd
 
-from distance import AVG_SPEED_KMH, haversine_matrix, travel_time_matrix_s
+from geo import AVG_SPEED_KMH, haversine_matrix, travel_time_matrix_s
 
 DEPOT_INDEX = 0
 
