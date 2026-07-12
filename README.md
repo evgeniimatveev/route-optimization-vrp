@@ -1,5 +1,7 @@
 # 5 Trucks. 45 Deliveries. Same Day, Two Plans — One Wastes 91 km.
 
+**[Live dashboard →](https://route-optimization-vrp.streamlit.app)**
+
 A fictional Burbank distribution center needs to get 231 packages to 45 stops
 across the LA basin today. Two dispatchers plan the routes independently:
 
