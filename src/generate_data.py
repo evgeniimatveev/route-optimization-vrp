@@ -12,7 +12,18 @@ SEED = 42
 STOPS_PER_HUB = 3
 JITTER_DEG = 0.012  # ~1.3 km wobble around each hub center
 
-DEPOT = {"name": "Depot - Burbank Distribution Center", "lat": 34.1808, "lon": -118.3090}
+SERVICE_TIME_MIN = 5  # minutes spent parked/handing off packages at each stop
+HORIZON_MIN = 600  # 10-hour business day, 8:00-18:00, expressed as minutes-from-8am
+TIME_WINDOW_MIN = 120  # each stop gets a 2-hour delivery window inside the horizon
+
+DEPOT = {
+    "name": "Depot - Burbank Distribution Center",
+    "lat": 34.1808,
+    "lon": -118.3090,
+    "service_time_min": 0,
+    "tw_start_min": 0,
+    "tw_end_min": HORIZON_MIN,
+}
 
 # Real LA-area neighborhoods used as demand hubs
 HUBS = [
@@ -36,19 +47,29 @@ HUBS = [
 
 def generate(seed: int = SEED) -> pd.DataFrame:
     rng = np.random.default_rng(seed)
+    # Separate stream for time windows so adding this feature doesn't reshuffle
+    # the existing lat/lon/demand draws (keeps the 231-package dataset stable).
+    tw_rng = np.random.default_rng(seed + 1)
     rows = [{**DEPOT, "stop_id": 0, "demand": 0, "is_depot": True}]
 
     stop_id = 1
     for name, lat, lon in HUBS:
         for _ in range(STOPS_PER_HUB):
+            stop_lat = lat + rng.uniform(-JITTER_DEG, JITTER_DEG)
+            stop_lon = lon + rng.uniform(-JITTER_DEG, JITTER_DEG)
+            demand = int(rng.integers(1, 9))
+            tw_start = int(tw_rng.integers(0, HORIZON_MIN - TIME_WINDOW_MIN + 1))
             rows.append(
                 {
                     "stop_id": stop_id,
                     "name": f"{name} #{stop_id}",
-                    "lat": lat + rng.uniform(-JITTER_DEG, JITTER_DEG),
-                    "lon": lon + rng.uniform(-JITTER_DEG, JITTER_DEG),
-                    "demand": int(rng.integers(1, 9)),
+                    "lat": stop_lat,
+                    "lon": stop_lon,
+                    "demand": demand,
                     "is_depot": False,
+                    "service_time_min": SERVICE_TIME_MIN,
+                    "tw_start_min": tw_start,
+                    "tw_end_min": tw_start + TIME_WINDOW_MIN,
                 }
             )
             stop_id += 1

@@ -64,3 +64,40 @@ def test_optimized_beats_or_matches_baseline(stops_df):
     optimized = solve_cvrp(cvrp_in, time_limit_s=10)
     baseline = solve_nearest_neighbor(stops_df, vehicle_capacity=50)
     assert optimized.total_distance_m <= baseline.total_distance_m
+
+
+def test_cvrp_respects_time_windows(stops_df):
+    cvrp_in = build_input(stops_df, num_vehicles=6, vehicle_capacity=50)
+    result = solve_cvrp(cvrp_in, time_limit_s=10)
+    assert result.schedule  # non-empty
+    for row in result.schedule:
+        assert row["tw_start_s"] <= row["arrival_s"] <= row["tw_end_s"]
+
+
+def test_cvrp_schedule_covers_all_visited_stops(stops_df):
+    cvrp_in = build_input(stops_df, num_vehicles=6, vehicle_capacity=50)
+    result = solve_cvrp(cvrp_in, time_limit_s=10)
+    visited = {node for route in result.routes for node in route}
+    scheduled = {row["stop_id"] for row in result.schedule}
+    assert scheduled == visited
+
+
+def test_baseline_schedule_and_violation_count(stops_df):
+    result = solve_nearest_neighbor(stops_df, vehicle_capacity=50)
+    assert len(result.schedule) == len(stops_df) - 1
+    assert result.on_time_count + result.violation_count == len(result.schedule)
+    computed_violations = sum(
+        1 for row in result.schedule if not (row["tw_start_s"] <= row["arrival_s"] <= row["tw_end_s"])
+    )
+    assert computed_violations == result.violation_count
+
+
+def test_optimized_has_no_time_window_violations(stops_df):
+    # By construction: a stop that can't fit its window (and capacity) gets
+    # dropped via the disjunction penalty rather than scheduled late/early.
+    cvrp_in = build_input(stops_df, num_vehicles=6, vehicle_capacity=50)
+    result = solve_cvrp(cvrp_in, time_limit_s=10)
+    violations = sum(
+        1 for row in result.schedule if not (row["tw_start_s"] <= row["arrival_s"] <= row["tw_end_s"])
+    )
+    assert violations == 0
