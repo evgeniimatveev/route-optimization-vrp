@@ -107,6 +107,18 @@ costs. A "Delivery schedule" table shows every stop's ETA against its
 promised window, and an on-time-rate KPI turns the whole comparison into an
 SLA-compliance story a non-technical stakeholder can read at a glance.
 
+<details>
+<summary><b>📋 See the full 45-stop delivery schedule (click to expand)</b></summary>
+<br>
+
+Every stop OR-Tools visits, its assigned truck, ETA, promised 2-hour window,
+and compliance status — this is the live table from the dashboard, not a
+mock-up.
+
+![Delivery schedule — every stop's ETA vs. its 2-hour window, 45/45 on time](assets/delivery_schedule.png)
+
+</details>
+
 ## Try it yourself
 
 The dashboard lets you change the fleet size, per-truck capacity, average
