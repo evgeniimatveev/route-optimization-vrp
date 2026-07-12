@@ -30,6 +30,16 @@ Same demand. Same fleet. Same day. Same promises to customers.
 Dispatcher B needs one extra truck to guarantee every window — but still drives
 less overall, and turns an 89%-miss rate into a 100%-hit rate.
 
+> **One data point that says it all:** Dispatcher A's worst miss isn't a late
+> delivery — it's a truck that shows up to Griffith Park area **7.6 hours
+> before** the customer's window even opens. That's what "blind to time"
+> actually looks like: nearest-neighbor doesn't drive too slow, it just has
+> no concept of *when* it should arrive, so it front-loads whatever's
+> geographically convenient regardless of the promise made to the customer.
+> At $82/day, the optimized plan alone projects to **~$30K/year** in
+> fuel + labor savings for this single depot — before counting the cost of
+> 40 broken delivery promises.
+
 ![Naive nearest-neighbor routes — crossing paths, wasted mileage](assets/routes_baseline.png)
 *Dispatcher A: each truck greedily chases the nearest stop with no idea what time it promised to be there. Routes cross each other repeatedly.*
 
