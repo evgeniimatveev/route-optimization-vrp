@@ -37,7 +37,7 @@ def load_data() -> pd.DataFrame:
     return pd.read_csv(Path(__file__).parent.parent / "data" / "stops.csv")
 
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(show_spinner=False, max_entries=32, ttl=3600)
 def run_optimized(
     _df: pd.DataFrame, num_vehicles: int, capacity: int, time_limit: int, speed_kmh: float
 ):
@@ -45,7 +45,7 @@ def run_optimized(
     return solve_cvrp(cvrp_in, time_limit_s=time_limit)
 
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(show_spinner=False, max_entries=32, ttl=3600)
 def run_baseline(_df: pd.DataFrame, capacity: int, speed_kmh: float):
     return solve_nearest_neighbor(_df, vehicle_capacity=capacity, speed_kmh=speed_kmh)
 
@@ -158,9 +158,16 @@ def main():
 
     with st.sidebar:
         st.header("Fleet configuration")
-        num_vehicles = st.slider("Vehicles available", 3, 10, 6)
+        num_vehicles = st.slider("Vehicles available", 3, 8, 6)
         capacity = st.slider("Vehicle capacity (packages)", 20, 80, 50, step=5)
-        time_limit = st.slider("Solver time limit (seconds)", 3, 30, 10)
+        time_limit = st.slider(
+            "Solver time limit (seconds)",
+            3,
+            15,
+            10,
+            help="Capped at 15s — the added time-window dimension makes each solve "
+            "heavier on the (memory-constrained) hosting tier than distance-only CVRP.",
+        )
         speed_kmh = st.slider(
             "Avg. delivery speed (km/h)",
             15,

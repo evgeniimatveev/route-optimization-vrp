@@ -1,5 +1,6 @@
 """Capacitated Vehicle Routing Problem solver using Google OR-Tools."""
 
+import gc
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -152,6 +153,8 @@ def solve_cvrp(cvrp_input: CVRPInput, time_limit_s: int = 15) -> CVRPResult:
     solution = routing.SolveWithParameters(search_parameters)
 
     if solution is None:
+        del manager, routing
+        gc.collect()
         return CVRPResult([], [], 0.0, list(range(1, n)), time_limit_s, "INFEASIBLE")
 
     routes: list[list[int]] = []
@@ -195,7 +198,7 @@ def solve_cvrp(cvrp_input: CVRPInput, time_limit_s: int = 15) -> CVRPResult:
 
     dropped = [node for node in range(1, n) if node not in visited]
 
-    return CVRPResult(
+    result = CVRPResult(
         routes=routes,
         route_distances_m=route_distances,
         total_distance_m=float(sum(route_distances)),
@@ -205,6 +208,15 @@ def solve_cvrp(cvrp_input: CVRPInput, time_limit_s: int = 15) -> CVRPResult:
         schedule=schedule,
         total_time_s=total_time_s,
     )
+
+    # The SWIG-wrapped manager/routing/solution objects hold circular native
+    # references that Python's refcounting alone won't reclaim; a fresh set is
+    # built on every distinct slider combination, so force a sweep now instead
+    # of letting them pile up on a memory-constrained host.
+    del manager, routing, solution
+    gc.collect()
+
+    return result
 
 
 if __name__ == "__main__":
