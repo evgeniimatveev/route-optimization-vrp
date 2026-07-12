@@ -13,6 +13,8 @@ across the LA basin today. Two dispatchers plan the routes independently:
 
 Same demand. Same fleet. Same day.
 
+![Dashboard KPI header — 169.4 km optimized vs 260.7 km naive baseline, 35% saved](assets/dashboard_kpi_header.png)
+
 | | Dispatcher A (nearest-neighbor) | Dispatcher B (OR-Tools CVRP) |
 |---|---|---|
 | Total distance | 260.7 km | **169.4 km** |
