@@ -37,7 +37,7 @@ def load_data() -> pd.DataFrame:
     return pd.read_csv(Path(__file__).parent.parent / "data" / "stops.csv")
 
 
-@st.cache_data(show_spinner=False, max_entries=32, ttl=3600)
+@st.cache_data(show_spinner=False, max_entries=8, ttl=3600)
 def run_optimized(
     _df: pd.DataFrame, num_vehicles: int, capacity: int, time_limit: int, speed_kmh: float
 ):
@@ -45,7 +45,7 @@ def run_optimized(
     return solve_cvrp(cvrp_in, time_limit_s=time_limit)
 
 
-@st.cache_data(show_spinner=False, max_entries=32, ttl=3600)
+@st.cache_data(show_spinner=False, max_entries=8, ttl=3600)
 def run_baseline(_df: pd.DataFrame, capacity: int, speed_kmh: float):
     return solve_nearest_neighbor(_df, vehicle_capacity=capacity, speed_kmh=speed_kmh)
 
