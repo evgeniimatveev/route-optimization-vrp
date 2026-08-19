@@ -149,12 +149,6 @@ def solve_cvrp(cvrp_input: CVRPInput, time_limit_s: int = 15) -> CVRPResult:
         routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH
     )
     search_parameters.time_limit.FromSeconds(time_limit_s)
-    # Force single-threaded search — OR-Tools otherwise auto-detects CPU count
-    # and runs that many parallel search workers, each holding its own solver
-    # state. Streamlit Cloud's free tier caps the container around ~1GB RAM,
-    # so multi-worker search on a multi-vCPU box was the likely cause of the
-    # native "Segmentation fault" crashes seen in production (2026-08-17).
-    search_parameters.num_search_workers = 1
 
     solution = routing.SolveWithParameters(search_parameters)
 
