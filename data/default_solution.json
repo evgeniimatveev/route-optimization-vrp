@@ -1,0 +1,787 @@
+{
+  "params": {
+    "num_vehicles": 6,
+    "capacity": 50,
+    "time_limit": 10,
+    "speed_kmh": 25
+  },
+  "optimized": {
+    "routes": [
+      [
+        32,
+        6,
+        4,
+        5,
+        33,
+        3,
+        1,
+        2
+      ],
+      [
+        41,
+        42,
+        31,
+        34,
+        35,
+        36,
+        11,
+        38,
+        13,
+        44,
+        45
+      ],
+      [
+        23,
+        22,
+        24,
+        27,
+        29
+      ],
+      [
+        21,
+        26,
+        25,
+        28,
+        30,
+        20,
+        19
+      ],
+      [
+        37,
+        12,
+        10,
+        15,
+        39,
+        14,
+        40,
+        43
+      ],
+      [
+        17,
+        18,
+        16,
+        7,
+        9,
+        8
+      ]
+    ],
+    "route_distances_m": [
+      37676.45,
+      45124.4,
+      32486.7,
+      31433.95,
+      40236.75,
+      25017.2
+    ],
+    "total_distance_m": 211975.45,
+    "dropped_stops": [],
+    "solve_time_s": 10,
+    "status": "OK",
+    "schedule": [
+      {
+        "stop_id": 32,
+        "vehicle": 1,
+        "arrival_s": 6611,
+        "tw_start_s": 60,
+        "tw_end_s": 7260
+      },
+      {
+        "stop_id": 6,
+        "vehicle": 1,
+        "arrival_s": 7740,
+        "tw_start_s": 540,
+        "tw_end_s": 7740
+      },
+      {
+        "stop_id": 4,
+        "vehicle": 1,
+        "arrival_s": 8460,
+        "tw_start_s": 1260,
+        "tw_end_s": 8460
+      },
+      {
+        "stop_id": 5,
+        "vehicle": 1,
+        "arrival_s": 16620,
+        "tw_start_s": 16620,
+        "tw_end_s": 23820
+      },
+      {
+        "stop_id": 33,
+        "vehicle": 1,
+        "arrival_s": 17988,
+        "tw_start_s": 12180,
+        "tw_end_s": 19380
+      },
+      {
+        "stop_id": 3,
+        "vehicle": 1,
+        "arrival_s": 18769,
+        "tw_start_s": 11580,
+        "tw_end_s": 18780
+      },
+      {
+        "stop_id": 1,
+        "vehicle": 1,
+        "arrival_s": 19197,
+        "tw_start_s": 14580,
+        "tw_end_s": 21780
+      },
+      {
+        "stop_id": 2,
+        "vehicle": 1,
+        "arrival_s": 19611,
+        "tw_start_s": 18780,
+        "tw_end_s": 25980
+      },
+      {
+        "stop_id": 41,
+        "vehicle": 2,
+        "arrival_s": 14109,
+        "tw_start_s": 13560,
+        "tw_end_s": 20760
+      },
+      {
+        "stop_id": 42,
+        "vehicle": 2,
+        "arrival_s": 14443,
+        "tw_start_s": 13980,
+        "tw_end_s": 21180
+      },
+      {
+        "stop_id": 31,
+        "vehicle": 2,
+        "arrival_s": 15258,
+        "tw_start_s": 13140,
+        "tw_end_s": 20340
+      },
+      {
+        "stop_id": 34,
+        "vehicle": 2,
+        "arrival_s": 16080,
+        "tw_start_s": 8880,
+        "tw_end_s": 16080
+      },
+      {
+        "stop_id": 35,
+        "vehicle": 2,
+        "arrival_s": 16605,
+        "tw_start_s": 15780,
+        "tw_end_s": 22980
+      },
+      {
+        "stop_id": 36,
+        "vehicle": 2,
+        "arrival_s": 27420,
+        "tw_start_s": 27420,
+        "tw_end_s": 34620
+      },
+      {
+        "stop_id": 11,
+        "vehicle": 2,
+        "arrival_s": 29046,
+        "tw_start_s": 27840,
+        "tw_end_s": 35040
+      },
+      {
+        "stop_id": 38,
+        "vehicle": 2,
+        "arrival_s": 30058,
+        "tw_start_s": 24180,
+        "tw_end_s": 31380
+      },
+      {
+        "stop_id": 13,
+        "vehicle": 2,
+        "arrival_s": 30650,
+        "tw_start_s": 24420,
+        "tw_end_s": 31620
+      },
+      {
+        "stop_id": 44,
+        "vehicle": 2,
+        "arrival_s": 31594,
+        "tw_start_s": 27240,
+        "tw_end_s": 34440
+      },
+      {
+        "stop_id": 45,
+        "vehicle": 2,
+        "arrival_s": 32156,
+        "tw_start_s": 28560,
+        "tw_end_s": 35760
+      },
+      {
+        "stop_id": 23,
+        "vehicle": 3,
+        "arrival_s": 18420,
+        "tw_start_s": 11220,
+        "tw_end_s": 18420
+      },
+      {
+        "stop_id": 22,
+        "vehicle": 3,
+        "arrival_s": 27540,
+        "tw_start_s": 27540,
+        "tw_end_s": 34740
+      },
+      {
+        "stop_id": 24,
+        "vehicle": 3,
+        "arrival_s": 28116,
+        "tw_start_s": 25740,
+        "tw_end_s": 32940
+      },
+      {
+        "stop_id": 27,
+        "vehicle": 3,
+        "arrival_s": 29181,
+        "tw_start_s": 22380,
+        "tw_end_s": 29580
+      },
+      {
+        "stop_id": 29,
+        "vehicle": 3,
+        "arrival_s": 29926,
+        "tw_start_s": 25800,
+        "tw_end_s": 33000
+      },
+      {
+        "stop_id": 21,
+        "vehicle": 4,
+        "arrival_s": 11211,
+        "tw_start_s": 4200,
+        "tw_end_s": 11400
+      },
+      {
+        "stop_id": 26,
+        "vehicle": 4,
+        "arrival_s": 12296,
+        "tw_start_s": 8040,
+        "tw_end_s": 15240
+      },
+      {
+        "stop_id": 25,
+        "vehicle": 4,
+        "arrival_s": 12660,
+        "tw_start_s": 5460,
+        "tw_end_s": 12660
+      },
+      {
+        "stop_id": 28,
+        "vehicle": 4,
+        "arrival_s": 13288,
+        "tw_start_s": 7980,
+        "tw_end_s": 15180
+      },
+      {
+        "stop_id": 30,
+        "vehicle": 4,
+        "arrival_s": 13731,
+        "tw_start_s": 12120,
+        "tw_end_s": 19320
+      },
+      {
+        "stop_id": 20,
+        "vehicle": 4,
+        "arrival_s": 18028,
+        "tw_start_s": 12960,
+        "tw_end_s": 20160
+      },
+      {
+        "stop_id": 19,
+        "vehicle": 4,
+        "arrival_s": 18420,
+        "tw_start_s": 18420,
+        "tw_end_s": 25620
+      },
+      {
+        "stop_id": 37,
+        "vehicle": 5,
+        "arrival_s": 7560,
+        "tw_start_s": 360,
+        "tw_end_s": 7560
+      },
+      {
+        "stop_id": 12,
+        "vehicle": 5,
+        "arrival_s": 13680,
+        "tw_start_s": 6480,
+        "tw_end_s": 13680
+      },
+      {
+        "stop_id": 10,
+        "vehicle": 5,
+        "arrival_s": 16920,
+        "tw_start_s": 16920,
+        "tw_end_s": 24120
+      },
+      {
+        "stop_id": 15,
+        "vehicle": 5,
+        "arrival_s": 17918,
+        "tw_start_s": 10920,
+        "tw_end_s": 18120
+      },
+      {
+        "stop_id": 39,
+        "vehicle": 5,
+        "arrival_s": 18421,
+        "tw_start_s": 11520,
+        "tw_end_s": 18720
+      },
+      {
+        "stop_id": 14,
+        "vehicle": 5,
+        "arrival_s": 21660,
+        "tw_start_s": 21660,
+        "tw_end_s": 28860
+      },
+      {
+        "stop_id": 40,
+        "vehicle": 5,
+        "arrival_s": 22432,
+        "tw_start_s": 15420,
+        "tw_end_s": 22620
+      },
+      {
+        "stop_id": 43,
+        "vehicle": 5,
+        "arrival_s": 23760,
+        "tw_start_s": 23760,
+        "tw_end_s": 30960
+      },
+      {
+        "stop_id": 17,
+        "vehicle": 6,
+        "arrival_s": 13588,
+        "tw_start_s": 7860,
+        "tw_end_s": 15060
+      },
+      {
+        "stop_id": 18,
+        "vehicle": 6,
+        "arrival_s": 13936,
+        "tw_start_s": 12120,
+        "tw_end_s": 19320
+      },
+      {
+        "stop_id": 16,
+        "vehicle": 6,
+        "arrival_s": 14297,
+        "tw_start_s": 7560,
+        "tw_end_s": 14760
+      },
+      {
+        "stop_id": 7,
+        "vehicle": 6,
+        "arrival_s": 15180,
+        "tw_start_s": 7980,
+        "tw_end_s": 15180
+      },
+      {
+        "stop_id": 9,
+        "vehicle": 6,
+        "arrival_s": 15694,
+        "tw_start_s": 13380,
+        "tw_end_s": 20580
+      },
+      {
+        "stop_id": 8,
+        "vehicle": 6,
+        "arrival_s": 24180,
+        "tw_start_s": 24180,
+        "tw_end_s": 31380
+      }
+    ],
+    "total_time_s": 43709.89514226453
+  },
+  "baseline": {
+    "routes": [
+      [
+        43,
+        45,
+        44,
+        41,
+        42,
+        2,
+        1,
+        3,
+        33,
+        32,
+        40
+      ],
+      [
+        19,
+        20,
+        21,
+        23,
+        22,
+        24,
+        27,
+        25,
+        9
+      ],
+      [
+        17,
+        18,
+        16,
+        14,
+        39,
+        38,
+        37,
+        15,
+        13,
+        31,
+        8
+      ],
+      [
+        7,
+        10,
+        12,
+        11,
+        34,
+        36,
+        35,
+        4,
+        26
+      ],
+      [
+        28,
+        29,
+        30,
+        6,
+        5
+      ]
+    ],
+    "route_distances_m": [
+      33150.942784594954,
+      42809.47377677963,
+      44671.21907810995,
+      78638.48758615342,
+      61423.78540450163
+    ],
+    "total_distance_m": 260693.90863013957,
+    "vehicles_used": 5,
+    "schedule": [
+      {
+        "stop_id": 43,
+        "vehicle": 1,
+        "arrival_s": 648.2708447003021,
+        "tw_start_s": 23760,
+        "tw_end_s": 30960
+      },
+      {
+        "stop_id": 45,
+        "vehicle": 1,
+        "arrival_s": 1075.7104677947277,
+        "tw_start_s": 28560,
+        "tw_end_s": 35760
+      },
+      {
+        "stop_id": 44,
+        "vehicle": 1,
+        "arrival_s": 1637.7958686872216,
+        "tw_start_s": 27240,
+        "tw_end_s": 34440
+      },
+      {
+        "stop_id": 41,
+        "vehicle": 1,
+        "arrival_s": 2292.188231321993,
+        "tw_start_s": 13560,
+        "tw_end_s": 20760
+      },
+      {
+        "stop_id": 42,
+        "vehicle": 1,
+        "arrival_s": 2626.4591888223404,
+        "tw_start_s": 13980,
+        "tw_end_s": 21180
+      },
+      {
+        "stop_id": 2,
+        "vehicle": 1,
+        "arrival_s": 3242.129237545073,
+        "tw_start_s": 18780,
+        "tw_end_s": 25980
+      },
+      {
+        "stop_id": 1,
+        "vehicle": 1,
+        "arrival_s": 3655.6379843347927,
+        "tw_start_s": 14580,
+        "tw_end_s": 21780
+      },
+      {
+        "stop_id": 3,
+        "vehicle": 1,
+        "arrival_s": 4084.1266983432524,
+        "tw_start_s": 11580,
+        "tw_end_s": 18780
+      },
+      {
+        "stop_id": 33,
+        "vehicle": 1,
+        "arrival_s": 4865.245819970606,
+        "tw_start_s": 12180,
+        "tw_end_s": 19380
+      },
+      {
+        "stop_id": 32,
+        "vehicle": 1,
+        "arrival_s": 5292.196572104712,
+        "tw_start_s": 60,
+        "tw_end_s": 7260
+      },
+      {
+        "stop_id": 40,
+        "vehicle": 1,
+        "arrival_s": 6388.330596348127,
+        "tw_start_s": 15420,
+        "tw_end_s": 22620
+      },
+      {
+        "stop_id": 19,
+        "vehicle": 2,
+        "arrival_s": 1016.6941063729272,
+        "tw_start_s": 18420,
+        "tw_end_s": 25620
+      },
+      {
+        "stop_id": 20,
+        "vehicle": 2,
+        "arrival_s": 1408.3908154757326,
+        "tw_start_s": 12960,
+        "tw_end_s": 20160
+      },
+      {
+        "stop_id": 21,
+        "vehicle": 2,
+        "arrival_s": 1898.5595678563502,
+        "tw_start_s": 4200,
+        "tw_end_s": 11400
+      },
+      {
+        "stop_id": 23,
+        "vehicle": 2,
+        "arrival_s": 2741.095079124389,
+        "tw_start_s": 11220,
+        "tw_end_s": 18420
+      },
+      {
+        "stop_id": 22,
+        "vehicle": 2,
+        "arrival_s": 3131.1884816365136,
+        "tw_start_s": 27540,
+        "tw_end_s": 34740
+      },
+      {
+        "stop_id": 24,
+        "vehicle": 2,
+        "arrival_s": 3706.8804509804877,
+        "tw_start_s": 25740,
+        "tw_end_s": 32940
+      },
+      {
+        "stop_id": 27,
+        "vehicle": 2,
+        "arrival_s": 4772.061847312431,
+        "tw_start_s": 22380,
+        "tw_end_s": 29580
+      },
+      {
+        "stop_id": 25,
+        "vehicle": 2,
+        "arrival_s": 5124.332384998049,
+        "tw_start_s": 5460,
+        "tw_end_s": 12660
+      },
+      {
+        "stop_id": 9,
+        "vehicle": 2,
+        "arrival_s": 7219.107791296134,
+        "tw_start_s": 13380,
+        "tw_end_s": 20580
+      },
+      {
+        "stop_id": 17,
+        "vehicle": 3,
+        "arrival_s": 1264.3769189524564,
+        "tw_start_s": 7860,
+        "tw_end_s": 15060
+      },
+      {
+        "stop_id": 18,
+        "vehicle": 3,
+        "arrival_s": 1612.3307964315022,
+        "tw_start_s": 12120,
+        "tw_end_s": 19320
+      },
+      {
+        "stop_id": 16,
+        "vehicle": 3,
+        "arrival_s": 1973.572684019012,
+        "tw_start_s": 7560,
+        "tw_end_s": 14760
+      },
+      {
+        "stop_id": 14,
+        "vehicle": 3,
+        "arrival_s": 2604.3177909181095,
+        "tw_start_s": 21660,
+        "tw_end_s": 28860
+      },
+      {
+        "stop_id": 39,
+        "vehicle": 3,
+        "arrival_s": 3005.360223161251,
+        "tw_start_s": 11520,
+        "tw_end_s": 18720
+      },
+      {
+        "stop_id": 38,
+        "vehicle": 3,
+        "arrival_s": 3403.0527916731025,
+        "tw_start_s": 24180,
+        "tw_end_s": 31380
+      },
+      {
+        "stop_id": 37,
+        "vehicle": 3,
+        "arrival_s": 3856.411367396107,
+        "tw_start_s": 360,
+        "tw_end_s": 7560
+      },
+      {
+        "stop_id": 15,
+        "vehicle": 3,
+        "arrival_s": 4500.235667738181,
+        "tw_start_s": 10920,
+        "tw_end_s": 18120
+      },
+      {
+        "stop_id": 13,
+        "vehicle": 3,
+        "arrival_s": 5141.70251527954,
+        "tw_start_s": 24420,
+        "tw_end_s": 31620
+      },
+      {
+        "stop_id": 31,
+        "vehicle": 3,
+        "arrival_s": 6302.275341787639,
+        "tw_start_s": 13140,
+        "tw_end_s": 20340
+      },
+      {
+        "stop_id": 8,
+        "vehicle": 3,
+        "arrival_s": 8130.91081622509,
+        "tw_start_s": 24180,
+        "tw_end_s": 31380
+      },
+      {
+        "stop_id": 7,
+        "vehicle": 4,
+        "arrival_s": 1533.3766153449887,
+        "tw_start_s": 7980,
+        "tw_end_s": 15180
+      },
+      {
+        "stop_id": 10,
+        "vehicle": 4,
+        "arrival_s": 3127.369612240238,
+        "tw_start_s": 16920,
+        "tw_end_s": 24120
+      },
+      {
+        "stop_id": 12,
+        "vehicle": 4,
+        "arrival_s": 3712.913328229163,
+        "tw_start_s": 6480,
+        "tw_end_s": 13680
+      },
+      {
+        "stop_id": 11,
+        "vehicle": 4,
+        "arrival_s": 4083.530062786461,
+        "tw_start_s": 27840,
+        "tw_end_s": 35040
+      },
+      {
+        "stop_id": 34,
+        "vehicle": 4,
+        "arrival_s": 5635.468850353255,
+        "tw_start_s": 8880,
+        "tw_end_s": 16080
+      },
+      {
+        "stop_id": 36,
+        "vehicle": 4,
+        "arrival_s": 6087.691626354387,
+        "tw_start_s": 27420,
+        "tw_end_s": 34620
+      },
+      {
+        "stop_id": 35,
+        "vehicle": 4,
+        "arrival_s": 6463.247297347348,
+        "tw_start_s": 15780,
+        "tw_end_s": 22980
+      },
+      {
+        "stop_id": 4,
+        "vehicle": 4,
+        "arrival_s": 7588.338781002427,
+        "tw_start_s": 1260,
+        "tw_end_s": 8460
+      },
+      {
+        "stop_id": 26,
+        "vehicle": 4,
+        "arrival_s": 11874.216938324062,
+        "tw_start_s": 8040,
+        "tw_end_s": 15240
+      },
+      {
+        "stop_id": 28,
+        "vehicle": 5,
+        "arrival_s": 1872.7269537700417,
+        "tw_start_s": 7980,
+        "tw_end_s": 15180
+      },
+      {
+        "stop_id": 29,
+        "vehicle": 5,
+        "arrival_s": 2243.913022926981,
+        "tw_start_s": 25800,
+        "tw_end_s": 33000
+      },
+      {
+        "stop_id": 30,
+        "vehicle": 5,
+        "arrival_s": 2655.502883369343,
+        "tw_start_s": 12120,
+        "tw_end_s": 19320
+      },
+      {
+        "stop_id": 6,
+        "vehicle": 5,
+        "arrival_s": 7126.831676165167,
+        "tw_start_s": 540,
+        "tw_end_s": 7740
+      },
+      {
+        "stop_id": 5,
+        "vehicle": 5,
+        "arrival_s": 7658.770852158512,
+        "tw_start_s": 16620,
+        "tw_end_s": 23820
+      }
+    ],
+    "on_time_count": 5,
+    "violation_count": 40,
+    "total_time_s": 51039.922842740096
+  }
+}

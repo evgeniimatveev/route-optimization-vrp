@@ -1,5 +1,6 @@
 """Streamlit dashboard: LA last-mile delivery route optimization (CVRP)."""
 
+import json
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -10,9 +11,11 @@ import streamlit as st
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from baseline_solver import solve_nearest_neighbor
-from cvrp_solver import SolverCrashed, build_input, solve_cvrp_isolated
+from baseline_solver import BaselineResult, solve_nearest_neighbor
+from cvrp_solver import CVRPResult, SolverCrashed, build_input, solve_cvrp_isolated
 from geo import AVG_SPEED_KMH
+
+DEFAULT_SOLUTION_PATH = Path(__file__).parent.parent / "data" / "default_solution.json"
 
 WORKDAY_START = datetime(2000, 1, 1, 8, 0)  # 8:00 AM — matches generate_data.py's horizon
 
@@ -35,6 +38,23 @@ st.set_page_config(page_title="LA Route Optimizer", page_icon="🚚", layout="wi
 @st.cache_data
 def load_data() -> pd.DataFrame:
     return pd.read_csv(Path(__file__).parent.parent / "data" / "stops.csv")
+
+
+@st.cache_data
+def load_default_solution():
+    """Baked-in result for the sidebar's default scenario (see precompute_default.py).
+
+    Skips the live OR-Tools solve — the one path that has repeatedly segfaulted
+    under memory pressure on the free hosting tier — for the vast majority of
+    visits, which never touch the sliders (including every automated keepalive
+    ping). Falls back to a live solve only when a slider moves off default.
+    """
+    payload = json.loads(DEFAULT_SOLUTION_PATH.read_text())
+    return (
+        payload["params"],
+        CVRPResult(**payload["optimized"]),
+        BaselineResult(**payload["baseline"]),
+    )
 
 
 @st.cache_data(show_spinner=False, max_entries=8, ttl=3600)
@@ -155,16 +175,19 @@ def main():
     )
 
     df = load_data()
+    default_params, default_optimized, default_baseline = load_default_solution()
 
     with st.sidebar:
         st.header("Fleet configuration")
-        num_vehicles = st.slider("Vehicles available", 3, 8, 6)
-        capacity = st.slider("Vehicle capacity (packages)", 20, 80, 50, step=5)
+        num_vehicles = st.slider("Vehicles available", 3, 8, default_params["num_vehicles"])
+        capacity = st.slider(
+            "Vehicle capacity (packages)", 20, 80, default_params["capacity"], step=5
+        )
         time_limit = st.slider(
             "Solver time limit (seconds)",
             3,
             15,
-            10,
+            default_params["time_limit"],
             help="Capped at 15s — the added time-window dimension makes each solve "
             "heavier on the (memory-constrained) hosting tier than distance-only CVRP.",
         )
@@ -172,7 +195,7 @@ def main():
             "Avg. delivery speed (km/h)",
             15,
             40,
-            int(AVG_SPEED_KMH),
+            default_params["speed_kmh"],
             help="Urban stop-and-go speed, not highway cruising — feeds both solvers' travel-time "
             "estimates and each stop's 2-hour delivery window.",
         )
@@ -185,14 +208,25 @@ def main():
         wage_hr = st.number_input("Driver wage ($/hour)", 10.0, 60.0, 27.0, step=1.0)
         co2_kg_km = st.number_input("CO2 emissions (kg/km, diesel van)", 0.1, 2.0, 0.9, step=0.1)
 
-    with st.spinner("Solving CVRP with OR-Tools..."):
-        try:
-            optimized = run_optimized(df, num_vehicles, capacity, time_limit, speed_kmh)
-        except SolverCrashed as exc:
-            st.error(f"⚠️ {exc}")
-            st.stop()
-    with st.spinner("Running naive nearest-neighbor baseline..."):
-        baseline = run_baseline(df, capacity, speed_kmh)
+    is_default_scenario = (
+        num_vehicles == default_params["num_vehicles"]
+        and capacity == default_params["capacity"]
+        and time_limit == default_params["time_limit"]
+        and speed_kmh == default_params["speed_kmh"]
+    )
+
+    if is_default_scenario:
+        optimized = default_optimized
+        baseline = default_baseline
+    else:
+        with st.spinner("Solving CVRP with OR-Tools..."):
+            try:
+                optimized = run_optimized(df, num_vehicles, capacity, time_limit, speed_kmh)
+            except SolverCrashed as exc:
+                st.error(f"⚠️ {exc}")
+                st.stop()
+        with st.spinner("Running naive nearest-neighbor baseline..."):
+            baseline = run_baseline(df, capacity, speed_kmh)
 
     k = compute_kpis(df, optimized, baseline, fuel_km_rate, wage_hr, co2_kg_km)
 
