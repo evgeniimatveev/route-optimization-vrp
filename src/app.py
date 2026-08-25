@@ -11,7 +11,7 @@ import streamlit as st
 sys.path.insert(0, str(Path(__file__).parent))
 
 from baseline_solver import solve_nearest_neighbor
-from cvrp_solver import build_input, solve_cvrp
+from cvrp_solver import SolverCrashed, build_input, solve_cvrp_isolated
 from geo import AVG_SPEED_KMH
 
 WORKDAY_START = datetime(2000, 1, 1, 8, 0)  # 8:00 AM — matches generate_data.py's horizon
@@ -42,7 +42,7 @@ def run_optimized(
     _df: pd.DataFrame, num_vehicles: int, capacity: int, time_limit: int, speed_kmh: float
 ):
     cvrp_in = build_input(_df, num_vehicles=num_vehicles, vehicle_capacity=capacity, speed_kmh=speed_kmh)
-    return solve_cvrp(cvrp_in, time_limit_s=time_limit)
+    return solve_cvrp_isolated(cvrp_in, time_limit_s=time_limit)
 
 
 @st.cache_data(show_spinner=False, max_entries=8, ttl=3600)
@@ -186,7 +186,11 @@ def main():
         co2_kg_km = st.number_input("CO2 emissions (kg/km, diesel van)", 0.1, 2.0, 0.9, step=0.1)
 
     with st.spinner("Solving CVRP with OR-Tools..."):
-        optimized = run_optimized(df, num_vehicles, capacity, time_limit, speed_kmh)
+        try:
+            optimized = run_optimized(df, num_vehicles, capacity, time_limit, speed_kmh)
+        except SolverCrashed as exc:
+            st.error(f"⚠️ {exc}")
+            st.stop()
     with st.spinner("Running naive nearest-neighbor baseline..."):
         baseline = run_baseline(df, capacity, speed_kmh)
 

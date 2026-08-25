@@ -1,6 +1,10 @@
 """Capacitated Vehicle Routing Problem solver using Google OR-Tools."""
 
 import gc
+import multiprocessing
+from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import TimeoutError as FutureTimeoutError
+from concurrent.futures.process import BrokenProcessPool
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -217,6 +221,36 @@ def solve_cvrp(cvrp_input: CVRPInput, time_limit_s: int = 15) -> CVRPResult:
     gc.collect()
 
     return result
+
+
+class SolverCrashed(RuntimeError):
+    """The OR-Tools worker process died (segfault/OOM) or exceeded its time budget."""
+
+
+def solve_cvrp_isolated(cvrp_input: CVRPInput, time_limit_s: int = 15) -> CVRPResult:
+    """Run solve_cvrp() in a separate worker process.
+
+    The hosting tier's OR-Tools solves have segfaulted natively under memory
+    pressure (a crash Python's exception handling can't catch, since it kills
+    the interpreter itself). Running the solve in its own process means a
+    crash there takes down only that worker — the Streamlit server process,
+    and the rest of the app, stay alive to show a retry-able error instead of
+    the whole dashboard going down.
+    """
+    ctx = multiprocessing.get_context("spawn")
+    with ProcessPoolExecutor(max_workers=1, mp_context=ctx) as pool:
+        future = pool.submit(solve_cvrp, cvrp_input, time_limit_s)
+        try:
+            return future.result(timeout=time_limit_s + 20)
+        except BrokenProcessPool as exc:
+            raise SolverCrashed(
+                "The solver process crashed (likely an OR-Tools native crash under "
+                "memory pressure). Try fewer vehicles or a shorter time limit."
+            ) from exc
+        except FutureTimeoutError as exc:
+            raise SolverCrashed(
+                "The solver process did not finish in time and was abandoned."
+            ) from exc
 
 
 if __name__ == "__main__":
