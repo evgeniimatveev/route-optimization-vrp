@@ -9,7 +9,6 @@ from dataclasses import dataclass, field
 
 import numpy as np
 import pandas as pd
-from ortools.constraint_solver import pywrapcp, routing_enums_pb2
 
 from geo import AVG_SPEED_KMH, haversine_matrix, travel_time_matrix_s
 
@@ -79,6 +78,14 @@ TIME_SPAN_COST_COEFFICIENT = 1
 
 
 def solve_cvrp(cvrp_input: CVRPInput, time_limit_s: int = 15) -> CVRPResult:
+    # Imported here, not at module level: OR-Tools' native extension is the
+    # heaviest import in this app and the one path that has repeatedly
+    # segfaulted under memory pressure. The dashboard's default scenario
+    # (the vast majority of visits, including every keepalive ping) never
+    # calls this function at all — it loads a precomputed result instead —
+    # so keeping the import local means those visits never pay for it.
+    from ortools.constraint_solver import pywrapcp, routing_enums_pb2
+
     n = len(cvrp_input.demands)
     manager = pywrapcp.RoutingIndexManager(n, cvrp_input.num_vehicles, cvrp_input.depot)
     routing = pywrapcp.RoutingModel(manager)

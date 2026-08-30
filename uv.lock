@@ -1048,7 +1048,6 @@ dependencies = [
     { name = "ortools" },
     { name = "pandas" },
     { name = "plotly" },
-    { name = "pydeck" },
     { name = "streamlit" },
 ]
 
@@ -1064,7 +1063,6 @@ requires-dist = [
     { name = "ortools", specifier = ">=9.15.6755" },
     { name = "pandas", specifier = ">=3.0.3" },
     { name = "plotly", specifier = ">=6.9.0" },
-    { name = "pydeck", specifier = ">=0.9.3" },
     { name = "streamlit", specifier = ">=1.59.1" },
 ]
 

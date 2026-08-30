@@ -9,7 +9,6 @@ dependencies = [
     "ortools>=9.15.6755",
     "pandas>=3.0.3",
     "plotly>=6.9.0",
-    "pydeck>=0.9.3",
     "streamlit>=1.59.1",
 ]
 
