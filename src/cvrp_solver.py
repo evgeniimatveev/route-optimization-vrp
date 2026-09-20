@@ -241,6 +241,10 @@ class SolverCrashed(RuntimeError):
 _MAX_CONCURRENT_SOLVES = 1
 _solve_slots = threading.Semaphore(_MAX_CONCURRENT_SOLVES)
 
+# How long a request waits for a free solve slot before giving up. Kept short
+# and independent of the solve's own time budget — see solve_cvrp_isolated().
+_QUEUE_WAIT_S = 5
+
 
 def _solve_in_worker(conn, cvrp_input: CVRPInput, time_limit_s: int) -> None:
     try:
@@ -266,12 +270,17 @@ def solve_cvrp_isolated(cvrp_input: CVRPInput, time_limit_s: int = 15) -> CVRPRe
     process outright rather than merely giving up on waiting for it — a
     plain ProcessPoolExecutor still blocks on shutdown() until a hung worker
     exits on its own, which defeats the point of a timeout.
+
+    The queue wait for a free slot is capped independently of the solve
+    budget itself (see _QUEUE_WAIT_S) — reusing the full solve timeout as
+    the queue wait would let a queued request's worst case approach 2x the
+    solve budget, long enough to outlast the browser/proxy's own timeout.
     """
-    budget_s = time_limit_s + 20
-    if not _solve_slots.acquire(timeout=budget_s):
+    if not _solve_slots.acquire(timeout=_QUEUE_WAIT_S):
         raise SolverCrashed(
-            "Too many solves are already running on this host. Please try again shortly."
+            "The solver is busy with another request right now. Please try again shortly."
         )
+    budget_s = time_limit_s + 20
     try:
         ctx = multiprocessing.get_context("spawn")
         parent_conn, child_conn = ctx.Pipe(duplex=False)
