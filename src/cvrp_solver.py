@@ -2,9 +2,7 @@
 
 import gc
 import multiprocessing
-from concurrent.futures import ProcessPoolExecutor
-from concurrent.futures import TimeoutError as FutureTimeoutError
-from concurrent.futures.process import BrokenProcessPool
+import threading
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -231,7 +229,26 @@ def solve_cvrp(cvrp_input: CVRPInput, time_limit_s: int = 15) -> CVRPResult:
 
 
 class SolverCrashed(RuntimeError):
-    """The OR-Tools worker process died (segfault/OOM) or exceeded its time budget."""
+    """The OR-Tools worker process died (segfault/OOM), hung, or raised an error."""
+
+
+# Caps how many OR-Tools solves may run at once across all sessions in this
+# server process. Each solve is already isolated to its own worker, but on a
+# memory-constrained host, several concurrent workers can independently OOM
+# even though none of them individually would have. Matches the same
+# conservative posture as the single-threaded search and reduced cache
+# retention below.
+_MAX_CONCURRENT_SOLVES = 1
+_solve_slots = threading.Semaphore(_MAX_CONCURRENT_SOLVES)
+
+
+def _solve_in_worker(conn, cvrp_input: CVRPInput, time_limit_s: int) -> None:
+    try:
+        conn.send(("ok", solve_cvrp(cvrp_input, time_limit_s)))
+    except Exception as exc:  # noqa: BLE001 - forward any worker-side failure as data
+        conn.send(("error", f"{type(exc).__name__}: {exc}"))
+    finally:
+        conn.close()
 
 
 def solve_cvrp_isolated(cvrp_input: CVRPInput, time_limit_s: int = 15) -> CVRPResult:
@@ -243,21 +260,53 @@ def solve_cvrp_isolated(cvrp_input: CVRPInput, time_limit_s: int = 15) -> CVRPRe
     crash there takes down only that worker — the Streamlit server process,
     and the rest of the app, stay alive to show a retry-able error instead of
     the whole dashboard going down.
+
+    A global semaphore additionally caps concurrent solves across sessions
+    (see _MAX_CONCURRENT_SOLVES), and a real timeout terminates the worker
+    process outright rather than merely giving up on waiting for it — a
+    plain ProcessPoolExecutor still blocks on shutdown() until a hung worker
+    exits on its own, which defeats the point of a timeout.
     """
-    ctx = multiprocessing.get_context("spawn")
-    with ProcessPoolExecutor(max_workers=1, mp_context=ctx) as pool:
-        future = pool.submit(solve_cvrp, cvrp_input, time_limit_s)
+    budget_s = time_limit_s + 20
+    if not _solve_slots.acquire(timeout=budget_s):
+        raise SolverCrashed(
+            "Too many solves are already running on this host. Please try again shortly."
+        )
+    try:
+        ctx = multiprocessing.get_context("spawn")
+        parent_conn, child_conn = ctx.Pipe(duplex=False)
+        process = ctx.Process(target=_solve_in_worker, args=(child_conn, cvrp_input, time_limit_s))
+        process.start()
+        child_conn.close()  # only the worker's copy should keep the writable end open
+
         try:
-            return future.result(timeout=time_limit_s + 20)
-        except BrokenProcessPool as exc:
-            raise SolverCrashed(
-                "The solver process crashed (likely an OR-Tools native crash under "
-                "memory pressure). Try fewer vehicles or a shorter time limit."
-            ) from exc
-        except FutureTimeoutError as exc:
-            raise SolverCrashed(
-                "The solver process did not finish in time and was abandoned."
-            ) from exc
+            if not parent_conn.poll(budget_s):
+                process.terminate()
+                process.join(5)
+                if process.is_alive():
+                    process.kill()
+                    process.join()
+                raise SolverCrashed(
+                    "The solver process did not finish in time and was terminated."
+                )
+            try:
+                status, payload = parent_conn.recv()
+            except EOFError as exc:
+                raise SolverCrashed(
+                    "The solver process crashed (likely an OR-Tools native crash under "
+                    "memory pressure). Try fewer vehicles or a shorter time limit."
+                ) from exc
+            process.join(5)
+            if status == "ok":
+                return payload
+            raise SolverCrashed(f"The solver process failed: {payload}")
+        finally:
+            parent_conn.close()
+            if process.is_alive():
+                process.kill()
+                process.join()
+    finally:
+        _solve_slots.release()
 
 
 if __name__ == "__main__":
