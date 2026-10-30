@@ -1,4 +1,4 @@
-# 45 Deliveries. 45 Promised Time Slots. One Dispatcher Blows 40 of Them.
+# 45 Deliveries. 45 Promised Time Slots. One Dispatcher Blows 40 of Them. 
 
 **[Live dashboard →](https://route-optimization-vrp.streamlit.app)**
 
